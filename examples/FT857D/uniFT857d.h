@@ -1,41 +1,8 @@
-/*************************************************************************
- * FT857D CAT Library, by Pavel Milanes, CO7WT, pavelmc@gmail.com
- *
- * The goal of this lib is to act as a Yaesu FT-857D radio from the
- * CAT point of view, then you can talk with your sketch from the PC like
- * if it was a real radio via CAT commands; to command a DDS for example.
- *
- * This work was a need from my side for the arduino-arcs project
- * see it here https://github.com/pavelmc/arduino-arcs
- *
- * This code has been built with the review of various sources:
- * - James Buck, VE3BUX, FT857D arduino Lib [http://www.ve3bux.com]
- * - Hamlib source code
- * - FLRig source code
- * - Chirp source code
- *
- * You can always found the last version in https://github.com/pavelmc/FT857d/
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- * **************************************************************************/
-
-#ifndef ft857d_h
-#define ft857d_h
+#ifndef uniFT857d_h
+#define uniFT857d_h
 
 #include "Arduino.h"
-
+#include "ALSerial.h"
 /*
  * CAT Command definition from VE3BUX library and more
  * We will comment the ones we don't use for code efficiency & refference
@@ -100,11 +67,17 @@ typedef void (*FuncPtrLong)(long);
 /*
  * The class...
  */
-class ft857d {
+class uniFT857d {
+ protected:
+   ALSerial& FPort;
+   
  public:
+  // конструктор. Принимает ранее созданный ALSerial
+    uniFT857d(ALSerial& ASerialPort); 
+    
     // we have two kind of constructors here
     void begin(); // default for the radio 9600 @ 8N2
-    void begin(long baudrate, int mode); // custom baudrate and mode
+    void begin(long baudrate =4800, uint16_t mode = 802); // custom baudrate and mode
     void check(); // periodic check for serial commands
     // the functions that links the lib with your code
     void addCATPtt(void (*)(boolean));
